@@ -21,7 +21,6 @@ public partial class MoviesDbContext : DbContext
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.ModifiedAt).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.MovieSid).HasComputedColumnSql("('MOV-'+right('0000'+CONVERT([varchar](10),[Id]),(4)))", true);
             entity.Property(e => e.Status).HasDefaultValue(1);
         });
 

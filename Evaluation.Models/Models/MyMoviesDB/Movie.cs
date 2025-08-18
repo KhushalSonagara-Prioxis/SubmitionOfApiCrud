@@ -6,15 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Evaluation.Models.Models.MyMoviesDB;
 
+[Index("Title", Name = "UQ_Movies_Title", IsUnique = true)]
 public partial class Movie
 {
     [Key]
     public int Id { get; set; }
-
-    [Column("MovieSID")]
-    [StringLength(8)]
-    [Unicode(false)]
-    public string? MovieSid { get; set; }
 
     [StringLength(255)]
     public string Title { get; set; } = null!;
@@ -39,4 +35,8 @@ public partial class Movie
     public DateTime? ModifiedAt { get; set; }
 
     public int Status { get; set; }
+
+    [Column("MovieSID")]
+    [StringLength(100)]
+    public string MovieSid { get; set; } = null!;
 }

@@ -29,9 +29,9 @@ public class MovieController : BaseController
     {
         try
         {
-            _logger.LogInformation("==========Get all users=========");
+            _logger.LogInformation("==========Get all Movies=========");
             var paramaters = FillParamesFromModel(model);
-            _logger.LogInformation("Get all users with search {paramaters}", paramaters);
+            _logger.LogInformation("Get all Movies with search {paramaters}", paramaters);
         
             var list = await _movieRepository.List(paramaters);
             if (list != null)
@@ -39,7 +39,7 @@ public class MovieController : BaseController
                 var result = JsonConvert.DeserializeObject<List<MovieResponseModel>>(list.Result?.ToString() ?? "[]") ?? [];
                 return Ok(result);
             }
-            _logger.LogInformation("========No users with search {paramaters}", paramaters);
+            _logger.LogInformation("========No Movies with search {paramaters}", paramaters);
             return NoContent();
 
         }

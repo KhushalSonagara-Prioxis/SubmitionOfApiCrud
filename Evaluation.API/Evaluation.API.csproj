@@ -32,4 +32,8 @@
       <ProjectReference Include="..\Evaluation.Service\Evaluation.Service.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Logs\" />
+    </ItemGroup>
+
 </Project>
