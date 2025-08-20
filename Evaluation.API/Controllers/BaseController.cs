@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Globalization;
+using Evaluation.API.Helper;
 using Evaluation.Common;
 using Evaluation.Model.CommonModel;
+using Evaluation.Models.CommonModel;
 
 namespace Evaluation.API.Controllers;
 
@@ -17,6 +19,48 @@ namespace Evaluation.API.Controllers;
                 "ROLLBACK", "SAVEPOINT","SHUTDOWN","RESTORE", "GRANT", "REVOKE" ,"RANDOMBLOB", "SLEEP"
             };
         public BaseController() { }
+        #endregion
+        
+        #region Bind Search Result
+        /// <summary>
+        /// Binds search results and updates metadata for pagination.
+        /// </summary>
+        /// <param name="list">The Page object containing search results.</param>
+        /// <param name="model">The search request model.</param>
+        /// <param name="key">The key for identifying the search.</param>
+        /// <returns>The updated Page object with metadata.</returns>
+        [NonAction]
+        public Page BindSearchResult(Page list, SearchRequestModel model, string key)
+        {
+            list.Meta.FirstPageUrl = HttpContext.Request.HttpContext.AddOrReplaceQueryParameter("page", "1");
+            list.Meta.Url = HttpContext.Request.HttpContext.AddOrReplaceQueryParameter("page", model.Page.ToString());
+            list.Meta.Page = model.Page;
+            list.Meta.PageSize = model.PageSize;
+            list.Meta.NextPageExists = true;
+
+            if (list.Meta.TotalResults > 0)
+            {
+                if (list.Meta.TotalResults > (model.Page * model.PageSize))
+                {
+                    list.Meta.NextPageUrl = HttpContext.Request.HttpContext.AddOrReplaceQueryParameter("page", (model.Page + 1).ToString());
+                    
+                }
+                if (model.Page > 1)
+                {
+                    list.Meta.PreviousPageUrl = HttpContext.Request.HttpContext.AddOrReplaceQueryParameter("page", (model.Page - 1).ToString());
+                }
+                
+                list.Meta.TotalPages = (int)Math.Ceiling((double)list.Meta.TotalResults / model.PageSize);
+                
+                if (list.Meta.Page >= list.Meta.TotalPages)
+                {
+                    list.Meta.NextPageExists = false;
+                }
+            }
+
+            list.Meta.Key = key;
+            return list;
+        }
         #endregion
 
         #region Fill Parames From Model

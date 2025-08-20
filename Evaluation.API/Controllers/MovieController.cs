@@ -37,7 +37,8 @@ public class MovieController : BaseController
             if (list != null)
             {
                 var result = JsonConvert.DeserializeObject<List<MovieResponseModel>>(list.Result?.ToString() ?? "[]") ?? [];
-                return Ok(result);
+                list.Result = result;
+                return Ok(BindSearchResult(list,model,"Movie List"));
             }
             _logger.LogInformation("========No Movies with search {paramaters}", paramaters);
             return NoContent();
